@@ -1,5 +1,19 @@
 # JupyterLab with Tensorflow
 
+## Note
+This is a fork from guumaster/playground-docker-gpu-jupyterlab
+I just updated cuda and some tools version.
+CUDA is 10.1
+Jupyterlab is 1.0.0
+Tensorflow 2
+
+I will not push this to guumaster because I have not did all tests properly, but so far so good.
+If you find any problems, you may do a pull request to me
+
+
+Below is README from guumaster
+
+Thanks @guumaster
 
 ## Pre-requisites
 

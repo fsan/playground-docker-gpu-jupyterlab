@@ -195,6 +195,8 @@ COPY config/jupyter_notebook_config.py /etc/jupyter/
 
 RUN fix-permissions /etc/jupyter/
 
+ENV PATH="/usr/local/cuda-10.0/bin/:${PATH}"
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
 
