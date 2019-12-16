@@ -3,9 +3,9 @@
 # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile 
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/dockerfiles/dockerfiles/nvidia-jupyter.Dockerfile
 
-FROM nvidia/cuda:9.0-base-ubuntu16.04
+FROM nvidia/cuda:10.1-base-ubuntu18.04
 
-ARG NB_USER="jovyan"
+ARG NB_USER="fox"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
@@ -32,34 +32,38 @@ RUN apt-get update && apt-get -yq dist-upgrade \
     sudo \
     locales \
     fonts-liberation \
-    # Pick up some TF dependencies
     build-essential \
-    cuda-command-line-tools-9-0 \
-    cuda-cublas-9-0 \
-    cuda-cufft-9-0 \
-    cuda-curand-9-0 \
-    cuda-cusolver-9-0 \
-    cuda-cusparse-9-0 \
-    libcudnn7=7.2.1.38-1+cuda9.0 \
-    libnccl2=2.2.13-1+cuda9.0 \
     libfreetype6-dev \
     libhdf5-serial-dev \
-    libpng12-dev \
+    libpng-dev \
     libzmq3-dev \
     pkg-config \
     software-properties-common \
-    unzip \
- && \
-   apt-get clean && \
+    unzip 
+
+# Pick up some TF dependencies
+RUN apt-get install -yq --no-install-recommends \
+    cuda-command-line-tools-10-0 \
+    cuda-cublas-10-0 \
+    cuda-cufft-10-0 \
+    cuda-curand-10-0 \
+    cuda-cusolver-10-0 \
+    cuda-cusparse-10-0
+
+RUN apt-get install -yq --no-install-recommends \
+    libcudnn7=7.3.0.29-1+cuda10.0 \
+    libnccl2=2.3.4-1+cuda10.0
+
+RUN apt-get clean && \
    rm -rf /var/lib/apt/lists/*
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
 RUN apt-get update && \
-    apt-get install nvinfer-runtime-trt-repo-ubuntu1604-4.0.1-ga-cuda9.0 && \
+    apt-get install -y nvinfer-runtime-trt-repo-ubuntu1804-5.0.2-ga-cuda10.0 && \
     apt-get update && \
-    apt-get install libnvinfer4=4.1.2-1+cuda9.0
+    apt-get install -y libnvinfer6=6.0.1-1+cuda10.2
 
 #ARG PYTHON=python3
 #ARG PIP=pip3
@@ -108,10 +112,10 @@ USER $NB_UID
 #    setuptools
 
 # Install conda as jovyan and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION 4.5.11
+ENV MINICONDA_VERSION 4.7.12.1
 RUN cd /tmp && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "e1045ee415162f944b6aebfe560b8fee *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+    echo "81c773ff87af5cfac79ab862942ab6b3 *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
@@ -136,9 +140,9 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 COPY requirements.txt .
 
 RUN conda install --quiet --yes \
-    'notebook=5.7.0' \
-    'jupyterhub=0.9.4' \
-    'jupyterlab=0.35.4'
+    'notebook=6.0.2' \
+    'jupyterhub=1.0.0' \
+    'jupyterlab=1.2.4'
 
 RUN conda install --quiet --yes --file requirements.txt && \
     conda clean -tipsy && \
