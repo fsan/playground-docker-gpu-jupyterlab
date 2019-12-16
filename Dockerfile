@@ -144,9 +144,9 @@ RUN conda install --quiet --yes \
     'jupyterhub=1.0.0' \
     'jupyterlab=1.2.4'
 
-RUN conda install --quiet --yes --file requirements.txt && \
-    conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+#jupyter labextension install @jupyterlab/hub-extension@^0.19.1 && \
+RUN conda install --quiet --yes --file requirements.txt
+RUN conda clean -tipsy && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
