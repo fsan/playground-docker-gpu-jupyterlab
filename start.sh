@@ -1,1 +1,3 @@
-docker run --gpus all -ti --rm -p 8888:8888 -v /home/fox/workspace/ndocker/notebooks:/notebooks motbus3/jupyter-lab
+#!/bin/bash
+
+docker run --gpus all -ti --rm -v ${HOME}:/home/fox/workspace -p 8888:8888 motbus3/jupyter-lab
