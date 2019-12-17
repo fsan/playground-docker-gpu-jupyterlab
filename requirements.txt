@@ -11,6 +11,7 @@ tqdm
 
 # notebooks extensions
 ipywidgets
+jupyterhub==1.0.0
 jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
 widgetsnbextension

@@ -11,6 +11,7 @@ ORIG_GID=DEFAULT_GID
 GID=$(id -g)
 
 cp -R .env-example .env
+cp -R Dockerfile-example Dockerfile
 vim bin/start.sh +%s/${ORIG_NAME}/${USER}/g +xa
-vim Dockerfile +%s/${ORIG_NAME}/${USER}/g +xa
+vim Dockerfile +%s/${ORIG_NAME}/${USER}/g +%s/${ORIG_UID}/${UID}/g +%s/${ORIG_GID}/${GID}/g +xa
 vim .env +%s/${ORIG_NAME}/${USER}/g +%s/${ORIG_UID}/${UID}/g +%s/${ORIG_GID}/${GID}/g +xa

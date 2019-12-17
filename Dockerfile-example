@@ -8,9 +8,9 @@
 FROM nvcr.io/nvidia/cuda:10.0-runtime-ubuntu18.04
 #FROM nvcr.io/nvidia/cuda:10.2-runtime-ubuntu18.04 # not working this pc.
 
-ARG NB_USER=fox
-ARG NB_UID=1000
-ARG NB_GID=1000
+ARG NB_USER=DEFAULT_USERNAME
+ARG NB_UID=DEFAULT_UID
+ARG NB_GID=DEFAULT_GID
 
 RUN echo $NB_USER
 

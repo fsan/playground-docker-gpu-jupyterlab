@@ -10,6 +10,7 @@ Tensorflow 2
 I will not push this to guumaster because I have not did all tests properly, but so far so good.
 If you find any problems, you may do a pull request to me
 
+**You need run ./configure.sh first**
 
 Below is README from guumaster
 
