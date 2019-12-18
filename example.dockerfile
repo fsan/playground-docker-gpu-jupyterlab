@@ -243,9 +243,7 @@ RUN apt install -y cmake pkg-config libavcodec-dev libavformat-dev libswscale-de
 
 RUN cd /tmp/ && wget -qO- https://github.com/opencv/opencv/archive/4.1.2.tar.gz         | tar --transform 's/^dbt2-0.37.50.3/dbt2/' -xz
 RUN cd /tmp/ && wget -qO- https://github.com/opencv/opencv_contrib/archive/4.1.2.tar.gz | tar --transform 's/^dbt2-0.37.50.3/dbt2/' -xz
-RUN mkdir /tmp/opencv-4.1.2/build && cd /tmp/opencv-4.1.2/build/
-RUN cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_CUDA=ON -D WITH_OPENCL=ON -D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.1.2/modules -D WITH_LIBV4L=OFF -D WITH_V4L=OFF -D INSTALL_C_EXAMPLES=OFF -D INSTALL_CREATE_DISTRIB=ON -D WITH_DC1394=OFF -D ENABLE_NEON=OFF -D OPENCV_ENABLE_NONFREE=ON  -D WITH_PROTOBUF=OFF ..
-RUN make -j$(cat /proc/cpuinfo | grep processor | wc -l)  && make install
+RUN mkdir /tmp/opencv-4.1.2/build && cd /tmp/opencv-4.1.2/build && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_CUDA=ON -D WITH_OPENCL=ON -D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.1.2/modules -D WITH_LIBV4L=OFF -D WITH_V4L=OFF -D INSTALL_C_EXAMPLES=OFF -D INSTALL_CREATE_DISTRIB=ON -D WITH_DC1394=OFF -D ENABLE_NEON=OFF -D OPENCV_ENABLE_NONFREE=ON  -D WITH_PROTOBUF=OFF .. && make -j$(cat /proc/cpuinfo | grep processor | wc -l)  && make install
 RUN rm -rfv /tmp/*
 
 ##### USING FILES BUILT ON MY HOST MACHINE #######
