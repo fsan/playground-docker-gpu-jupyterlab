@@ -1,3 +1,4 @@
 Dockerfile
 .ipynb_checkpoints
 .env
+assets/cv.tar.gz

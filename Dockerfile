@@ -17,6 +17,8 @@ RUN echo $NB_USER
 ADD bin/fix-permissions /usr/local/bin/fix-permissions
 
 ENV JUPYTER_ENABLE_LAB true
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV NVIDIA_VISIBLE_DEVICES=all
 
 USER root
 
@@ -55,7 +57,8 @@ RUN apt-get install -yq --no-install-recommends \
     cuda-cusparse-10-0
 
 RUN apt-get install -yq --no-install-recommends \
-	cuda-curand-dev-10-0
+	cuda-curand-dev-10-0 \
+    cuda-npp-dev-10-0
 
 #RUN apt-get install -yq --no-install-recommends \
 #    libcudnn7-dev \
@@ -206,12 +209,49 @@ COPY config/jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions /etc/jupyter/
 RUN apt-get install -y --no-install-recommends libgl1-mesa-glx 
 RUN apt-get install -y --no-install-recommends curl
-RUN conda install -yc conda-forge numpy opencv pip
+#RUN conda install -yc conda-forge numpy opencv pip
+RUN conda install -yc conda-forge numpy pip
 RUN apt-get install -y libcublas-dev
 RUN apt-get install -y libcudnn7-dev
 RUN pip install pycuda==2019.1.2
 
+
+RUN apt-get install -y --no-install-recommends ocl-icd-opencl-dev ocl-icd-libopencl1 
+RUN pip install pyopencl
+RUN mkdir -p /etc/OpenCL/vendors &&  echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
+#RUN conda install -c conda-forge pyopencl
+#RUN apt install -y clinfo nvidia-opencl-dev
+
 ENV PATH="/usr/local/cuda-10.0/bin/:${PATH}"
+
+RUN apt install -y cmake pkg-config libavcodec-dev libavformat-dev libswscale-dev --no-install-recommends
+
+# RUN apt install -y libv4l-dev libxvidcore-dev libx264-dev --no-install-recommends
+# RUN apt install -ylibtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev --no-install-recommends
+# RUN apt install -y libgtk2.0-dev --no-install-recommends
+
+# RUN apt install -y lshw
+# RUN apt lshw -class processor | grep capabilities | sed -E 's/^\s+capabilities:\s//'
+
+
+######## UNCOMMENT BELOW TO BUILD ##########
+######## IT WILL TAKE A LONG TIME ##########
+########       BELIEVE  ME        ##########
+########                          ##########
+########   YOU HAVE BEEN WARNED   ##########
+
+
+RUN cd /tmp/ && wget -qO- https://github.com/opencv/opencv/archive/4.1.2.tar.gz         | tar --transform 's/^dbt2-0.37.50.3/dbt2/' -xz
+RUN cd /tmp/ && wget -qO- https://github.com/opencv/opencv_contrib/archive/4.1.2.tar.gz | tar --transform 's/^dbt2-0.37.50.3/dbt2/' -xz
+RUN mkdir /tmp/opencv-4.1.2/build && cd /tmp/opencv-4.1.2/build/
+RUN cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_CUDA=ON -D WITH_OPENCL=ON -D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.1.2/modules -D WITH_LIBV4L=OFF -D WITH_V4L=OFF -D INSTALL_C_EXAMPLES=OFF -D INSTALL_CREATE_DISTRIB=ON -D WITH_DC1394=OFF -D ENABLE_NEON=OFF -D OPENCV_ENABLE_NONFREE=ON  -D WITH_PROTOBUF=OFF ..
+RUN make -j$(cat /proc/cpuinfo | grep processor | wc -l)  && make install
+RUN rm -rfv /tmp/*
+
+##### USING FILES BUILT ON MY HOST MACHINE #######
+# COPY assets/cv.tar.gz /tmp/cv.tar.gz
+# RUN cd /tmp && tar -xvf /tmp/cv.tar.gz && rm /tmp/cv.tar.gz && cd /tmp/cv/opencv-4.1.2/build && make install 
+
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
