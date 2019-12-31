@@ -28,9 +28,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # See http://bugs.python.org/issue19846
 ENV LANG C.UTF-8
-
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
+    apt-utils
+
+RUN apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
     ca-certificates \
@@ -44,7 +46,7 @@ RUN apt-get update && apt-get -yq dist-upgrade \
     libzmq3-dev \
     pkg-config \
     software-properties-common \
-    unzip 
+    unzip
 
 # Pick up some TF dependencies
 RUN apt-get install -yq --no-install-recommends \
@@ -209,7 +211,6 @@ COPY config/jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions /etc/jupyter/
 RUN apt-get install -y --no-install-recommends libgl1-mesa-glx 
 RUN apt-get install -y --no-install-recommends curl
-#RUN conda install -yc conda-forge numpy opencv pip
 RUN conda install -yc conda-forge numpy pip
 RUN apt-get install -y libcublas-dev
 RUN apt-get install -y libcudnn7-dev
@@ -219,19 +220,13 @@ RUN pip install pycuda==2019.1.2
 RUN apt-get install -y --no-install-recommends ocl-icd-opencl-dev ocl-icd-libopencl1 
 RUN pip install pyopencl
 RUN mkdir -p /etc/OpenCL/vendors &&  echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
-#RUN conda install -c conda-forge pyopencl
-#RUN apt install -y clinfo nvidia-opencl-dev
 
 ENV PATH="/usr/local/cuda-10.0/bin/:${PATH}"
 
 RUN apt install -y cmake pkg-config libavcodec-dev libavformat-dev libswscale-dev --no-install-recommends
 
-# RUN apt install -y libv4l-dev libxvidcore-dev libx264-dev --no-install-recommends
-# RUN apt install -ylibtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev --no-install-recommends
-# RUN apt install -y libgtk2.0-dev --no-install-recommends
-
-# RUN apt install -y lshw
-# RUN apt lshw -class processor | grep capabilities | sed -E 's/^\s+capabilities:\s//'
+RUN apt install -y lshw
+RUN apt lshw -class processor | grep capabilities | sed -E 's/^\s+capabilities:\s//'
 
 
 ######## UNCOMMENT BELOW TO BUILD ##########
@@ -247,9 +242,17 @@ RUN mkdir /tmp/opencv-4.1.2/build && cd /tmp/opencv-4.1.2/build && cmake -D CMAK
 RUN rm -rfv /tmp/*
 
 ##### USING FILES BUILT ON MY HOST MACHINE #######
-# COPY assets/cv.tar.gz /tmp/cv.tar.gz
-# RUN cd /tmp && tar -xvf /tmp/cv.tar.gz && rm /tmp/cv.tar.gz && cd /tmp/cv/opencv-4.1.2/build && make install 
+#COPY assets/cv.tar.gz /tmp/cv.tar.gz
+#RUN cd /tmp && tar -xvf /tmp/cv.tar.gz && rm /tmp/cv.tar.gz && cd /tmp/cv/opencv-4.1.2/build && make install 
 
+##############################
+
+COPY config/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+COPY config/environment.yaml /etc/jupyter/environment.yaml
+
+RUN apt install -y vim git silversearcher-ag
+RUN chown -Rv $NB_USER /home/$NB_USER
+RUN chgrp -Rv $NB_GID /home/$NB_USER
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

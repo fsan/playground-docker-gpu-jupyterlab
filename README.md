@@ -10,7 +10,11 @@ Tensorflow 2
 I will not push this to guumaster because I have not did all tests properly, but so far so good.
 If you find any problems, you may do a pull request to me
 
-**You need run ./configure.sh first**
+**You need EDIT ./configure.sh first**
+**Run ./build-image.sh to configure and build**
+
+**To start you container locally run**
+ ``` ./start local ```
 
 Below is README from guumaster
 
@@ -19,7 +23,6 @@ Thanks @guumaster
 ## Pre-requisites
 
 - Install `nvidia-dirvers` for your graphic card and make sure that `nvidia-smi` outputs information about the installed driver.
-
 
 ## Installation 
 

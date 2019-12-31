@@ -17,3 +17,8 @@ jupyter_nbextensions_configurator
 widgetsnbextension
 yapf
 rise
+
+# authentication
+jupyterhub-ldapauthenticator==1.2.2
+ldap3==2.6.1
+pyasn1==0.4.8
