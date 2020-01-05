@@ -14,7 +14,7 @@ If you find any problems, you may do a pull request to me
 **Run ./build-image.sh to configure and build**
 
 **To start you container locally run**
- ``` ./start local ```
+ ``` ./start.sh local ```
 
 Below is README from guumaster
 
