@@ -18,7 +18,7 @@ If you find any problems, you may do a pull request to me
 
 Below is README from guumaster
 
-Thanks @guumaster
+Thanks [@guumaster](https://github.com/guumaster/)
 
 ## Pre-requisites
 
