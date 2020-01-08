@@ -21,14 +21,14 @@ def get(config, strkeys, RaiseOnMissingKey=True):
     keys = strkeys.split(',')
     node = config
     for k in keys:
-        if node:
+        if node is not None:
             node = node.get(k, None)
             if RaiseOnMissingKey:
-                if not node:
+                if node is None:
                     raise KeyError('Missing key %s' % k)
         else:
             if RaiseOnMissingKey:
-                if not node:
+                if node is None:
                     raise KeyError('Missing node for %s' % k)
 
     return node
@@ -44,7 +44,7 @@ def get_type(config):
     return get(config, 'authentication,type')
 
 def get_enabled(config):
-    return get(config, 'authentication,enabled')
+    return (get(config, 'authentication,enabled') == True)
 
 def get_allowed_groups(config):
     return get(config, 'authentication,groups,allowed_groups', RaiseOnMissingKey=False)
@@ -114,7 +114,7 @@ if 'GEN_CERT' in os.environ:
 c.Spawner.default_url = '/lab'
 c.JupyterHub.spawner_class = 'jupyterhub.spawner.SimpleLocalProcessSpawner'
 
-if get_type == 'active_directory' and get_enabled(env):
+if get_type(env) == 'active_directory' and get_enabled(env):
     c.JupyterHub.authenticator_class = 'ldapauthenticator.LDAPAuthenticator'
     c.LDAPAuthenticator.server_address, _, c.LDAPAuthenticator.use_ssl,  = get_server(env)
 

@@ -16,6 +16,6 @@ authentication:
     user_search_base: 'OU=...' 
     bind_cn_template: 'OU=...' 
     user_attribute: 'sAMAccountName'
-    loopkup_cn: true
+    lookup_cn: true
     use_lookup_cn_username: false
     lookup_cn_user_cn_attribute: 'cn'

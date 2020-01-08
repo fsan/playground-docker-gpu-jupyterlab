@@ -7,11 +7,13 @@ if [ "local" == "$1" ]; then
 	read -s password
 	echo
 	docker stop -t0 jupyter
-	#set -e
+
 	docker run --gpus all -d --rm -v ${HOME}:/home/fox/workspace -p 8000:8000 --name jupyter motbus3/jupyter-lab
 	docker exec -u 0 jupyter bash -c "echo -e \"$password\n$password\" | passwd $username "
 	docker logs jupyter
 else
+	docker stop -t0 jupyter
+
 	docker run --gpus all -d --rm -v ${HOME}:/home/fox/workspace -p 8000:8000 --name jupyter motbus3/jupyter-lab
 fi
 
