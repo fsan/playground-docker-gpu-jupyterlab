@@ -206,7 +206,7 @@ RUN jupyter-nbextension enable tree-filter/index && \
 COPY bin/start.sh /usr/local/bin/
 COPY bin/start-notebook.sh /usr/local/bin/
 COPY bin/start-singleuser.sh /usr/local/bin/
-COPY config/jupyter_notebook_config.py /etc/jupyter/
+RUN mkdir -p /etc/jupyter/
 
 RUN fix-permissions /etc/jupyter/
 RUN apt-get install -y --no-install-recommends libgl1-mesa-glx 
@@ -246,9 +246,9 @@ RUN rm -rfv /tmp/*
 #RUN cd /tmp && tar -xvf /tmp/cv.tar.gz && rm /tmp/cv.tar.gz && cd /tmp/cv/opencv-4.1.2/build && make install 
 
 ##############################
-
-COPY config/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+COPY config/jupyterhub_config.py /etc/jupyter/jupyterhub_config.py
 COPY config/environment.yaml /etc/jupyter/environment.yaml
+
 
 RUN apt install -y vim git silversearcher-ag
 RUN chown -Rv $NB_USER /home/$NB_USER
